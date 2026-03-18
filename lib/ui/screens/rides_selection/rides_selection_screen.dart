@@ -1,13 +1,15 @@
+import 'package:blabla/ui/states/ride_preference_state.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../model/ride/ride.dart';
 import '../../../model/ride_pref/ride_pref.dart';
 import '../../../services/ride_prefs_service.dart';
-import '../../../services/rides_service.dart';
 import '../../../utils/animations_util.dart' show AnimationUtils;
 import '../../theme/theme.dart';
 import 'widgets/ride_preference_modal.dart';
 import 'widgets/rides_selection_header.dart';
 import 'widgets/rides_selection_tile.dart';
+import '../../../data/repositories/rides_repository/ride_repository.dart';
 
 ///
 ///  The Ride Selection screen allows user to select a ride, once ride preferences have been defined.
@@ -36,10 +38,18 @@ class _RidesSelectionScreenState extends State<RidesSelectionScreen> {
   }
 
   RidePreference get selectedRidePreference =>
-      RidePrefsService.selectedPreference!; // not null at this state
+    context.read<RidePreferenceState>().selectedPreference!;
 
-  List<Ride> get matchingRides =>
-      RidesService.getRidesFor(selectedRidePreference);
+
+  List<Ride> get matchingRides {
+    final rides = context.read<RideRepository>().getRide();
+
+    return rides.where((ride) {
+      return ride.departureLocation == selectedRidePreference.departure &&
+          ride.arrivalLocation == selectedRidePreference.arrival &&
+          ride.availableSeats == selectedRidePreference.requestedSeats;
+    }).toList();
+  }
 
   void onPreferencePressed() async {
     // 1 - Navigate to the rides preference picker
@@ -64,7 +74,10 @@ class _RidesSelectionScreenState extends State<RidesSelectionScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(
-          left: BlaSpacings.m, right: BlaSpacings.m, top: BlaSpacings.s),
+          left: BlaSpacings.m,
+          right: BlaSpacings.m,
+          top: BlaSpacings.s,
+        ),
         child: Column(
           children: [
             RideSelectionHeader(
@@ -73,9 +86,9 @@ class _RidesSelectionScreenState extends State<RidesSelectionScreen> {
               onFilterPressed: onFilterPressed,
               onPreferencePressed: onPreferencePressed,
             ),
-        
+
             SizedBox(height: 100),
-        
+
             Expanded(
               child: ListView.builder(
                 itemCount: matchingRides.length,
