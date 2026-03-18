@@ -42,6 +42,7 @@ class _RidesSelectionScreenState extends State<RidesSelectionScreen> {
 
 
   List<Ride> get matchingRides {
+    
     final rides = context.read<RideRepository>().getRide();
 
     return rides.where((ride) {

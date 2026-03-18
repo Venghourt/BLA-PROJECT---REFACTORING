@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../model/ride_pref/ride_pref.dart';
 
 class RidePreferenceState extends ChangeNotifier {
+  
   final RidePreferenceRepository repository;
 
   RidePreference? _selectedPreference;
