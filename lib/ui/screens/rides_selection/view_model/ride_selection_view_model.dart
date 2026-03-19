@@ -12,7 +12,11 @@ class RidesSelectionViewModel extends ChangeNotifier {
     required this.ridePreferenceState,
     required this.rideRepository,
   }) {
-    ridePreferenceState.addListener(notifyListeners);
+    ridePreferenceState.addListener(listener);
+  }
+
+  void listener() {
+    notifyListeners();
   }
 
   RidePreference? get selectedRidePreference =>
@@ -39,7 +43,7 @@ class RidesSelectionViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    ridePreferenceState.removeListener(notifyListeners);
+    ridePreferenceState.removeListener(listener);
     super.dispose();
   }
 }

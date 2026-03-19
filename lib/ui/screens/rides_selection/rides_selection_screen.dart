@@ -6,20 +6,21 @@ import 'view_model/ride_selection_view_model.dart';
 import 'widgets/ride_selection_content.dart';
 
 class RidesSelectionScreen extends StatelessWidget {
-  const RidesSelectionScreen({super.key});
+  RidesSelectionViewModel? viewModel;
+  RidesSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => RidesSelectionViewModel(
-        ridePreferenceState: context.read<RidePreferenceState>(),
-        rideRepository: context.read<RideRepository>(),
-      ),
-      child: Consumer<RidesSelectionViewModel>(
-        builder: (context, viewModel, child) {
-          return RidesSelectionContent(viewModel: viewModel);
-        },
-      ),
-    );
+    if(viewModel == null){
+      final RidePreferenceState ridePreferenceState = context
+              .read<RidePreferenceState>();
+          final RideRepository rideRepository = context.read<RideRepository>();
+          viewModel = RidesSelectionViewModel(
+            ridePreferenceState: ridePreferenceState,
+            rideRepository: rideRepository,
+          );
+    }
+    
+    return RidesSelectionContent(viewModel: viewModel!);
   }
 }
