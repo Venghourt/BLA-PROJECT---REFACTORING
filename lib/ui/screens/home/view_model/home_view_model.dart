@@ -6,7 +6,11 @@ class HomeViewModel extends ChangeNotifier {
   final RidePreferenceState ridePreferenceState;
 
   HomeViewModel({required this.ridePreferenceState}) {
-    ridePreferenceState.addListener(notifyListeners);
+    ridePreferenceState.addListener(listener);
+  }
+
+  void listener() {
+    notifyListeners();
   }
 
   RidePreference? get selectedPreference =>
@@ -21,7 +25,7 @@ class HomeViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    ridePreferenceState.removeListener(notifyListeners);
+    ridePreferenceState.removeListener(listener);
     super.dispose();
   }
 }

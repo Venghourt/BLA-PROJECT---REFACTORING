@@ -5,19 +5,19 @@ import 'view_model/home_view_model.dart';
 import 'widgets/home_content.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeViewModel? viewModel;
+
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => HomeViewModel(
-        ridePreferenceState: context.read<RidePreferenceState>(),
-      ),
-      child: Consumer<HomeViewModel>(
-        builder: (context, viewModel, child) {
-          return HomeContent(viewModel: viewModel);
-        },
-      ),
-    );
+    if (viewModel == null) {
+      final RidePreferenceState ridePreferenceState = context
+          .read<RidePreferenceState>();
+
+      viewModel = HomeViewModel(ridePreferenceState: ridePreferenceState);
+    }
+
+    return HomeContent(viewModel: viewModel!);
   }
 }
